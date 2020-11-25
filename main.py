@@ -1,6 +1,8 @@
 from tkinter import *
 from tkinter import messagebox
 import tkinter.messagebox
+import secrets
+import string
 
 
 # ****** GLOBAL VARIABLES ******
@@ -41,6 +43,38 @@ class popupWindow(object):
                 window.quit()
             self.e .delete(0, 'end')
             messagebox.showerror('Incorrect Password', 'Incorrect password, attempts remaining: ' + str(5 - self.attempts))
+            
+class genRandPassword(object):
+    
+    loop = False
+    
+    def __init__(self, master):
+        top = self.top = Toplevel(master)
+        top.title('Generate Random Password')
+        top.geometry('{}x{}'.format(300, 100))
+        top.resizable(width=False, height=False)
+        self.l = Label(top, text=" Enter Length: ", font=('Courier', 14), justify=CENTER)
+        self.l.pack()
+        self.e = Entry(top, width=30)
+        self.e.pack(pady=7)
+        self.b = Button(top, text='Generate', command=self.generate, font=('Courier', 14))
+        self.b.pack()
+        
+    def generate(self):
+        self.value = self.e.get()
+        stringSource  = string.ascii_letters + string.digits + string.punctuation
+        password = secrets.choice(string.ascii_lowercase)
+        password += secrets.choice(string.ascii_uppercase)
+        password += secrets.choice(string.digits)
+        password += secrets.choice(string.punctuation)
+
+        for i in range(int(self.value) - 4):
+            password += secrets.choice(stringSource)
+
+        char_list = list(password)
+        secrets.SystemRandom().shuffle(char_list)
+        password = ''.join(char_list)
+        messagebox.showinfo('Generated Password', 'Generated Password: ' + password)
 
 class entity_add:
 
@@ -188,6 +222,7 @@ def readfile():
 # ******* GRAPHICS *********
 
 m = popupWindow(window)
+p = genRandPassword(window)
 
 entity_label = Label(window, text='Add Entity', font=('Courier', 18))
 name_label = Label(window, text='Name: ', font=('Courier', 14))
